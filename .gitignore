@@ -1,2 +1,7 @@
 */*.class
 bin
+.cache
+.classpath
+.gradle
+.project
+.settings
