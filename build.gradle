@@ -2,17 +2,40 @@ apply plugin: 'scala'
 
 apply plugin: 'eclipse'
 
+archivesBaseName = 'DatabaseHelper'
+version = '1.0.0-SNAPSHOT'
+group = 'scala.db'
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
     compile 'org.scala-lang:scala-library:2.11.5'
+    compile 'com.h2database:h2:1.4.185'
+    compile 'com.zaxxer:HikariCP-java6:2.3.2'
+    
+    
+    
     testCompile "org.scala-lang:scala-library:2.11.5"
-    
     testCompile "org.scalatest:scalatest_2.11:2.2.4"
-    
     testCompile "junit:junit:4.12"
 }
+
+jar.doFirst{
+   manifest {
+            attributes("Manifest-Version"       : "1.0",
+                "Main-Class"             : "org.ccw.database.main.main",
+                "Class-Path"             : configurations.compile.collect { it.getName() }.join(' ') 
+            )
+   }
+}
+
+task copyToLib(type: Copy, dependsOn: build) {
+    into "$buildDir/libs"
+    from configurations.runtime
+}
+
+task doAll(dependsOn: [clean, copyToLib]) 
 
 

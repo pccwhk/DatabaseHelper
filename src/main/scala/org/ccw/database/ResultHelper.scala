@@ -2,7 +2,7 @@ package org.ccw.database
 
 import java.sql.ResultSet
 import java.sql.PreparedStatement
-import scala.collection.mutable.{Set => MutableSet}
+import scala.collection.mutable.{ Set => MutableSet }
 import scala.collection.mutable.ListBuffer
 
 trait ResultHelper {
