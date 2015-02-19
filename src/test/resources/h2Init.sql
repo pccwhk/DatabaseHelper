@@ -1,0 +1,1 @@
+CREATE TABLE STOCK AS SELECT * FROM CSVREAD('classpath:test.csv');

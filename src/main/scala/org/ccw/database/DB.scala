@@ -7,7 +7,7 @@ import scala.collection.concurrent.TrieMap
 
 trait DB {
 
-  def getConnection(connectionName: String): Connection
+  protected[this] def getConnection(connectionName: String): Option[Connection]
 
   val threadLocalMap = new ThreadLocal[Map[String, Connection]] {
     override def initialValue(): Map[String, Connection] = {
@@ -18,22 +18,32 @@ trait DB {
   def withThreadLocalConnection(connectionName: String)(body: Connection => Unit) = {
     val map = threadLocalMap.get
     var isFirst = false
-    val c = map.get(connectionName)
+    var connectionOpt: Option[Connection] = map.get(connectionName)
     var connection: Connection = null
-    if (c.isEmpty) {
+
+    if (map.get(connectionName).isEmpty) {
       isFirst = true
-      connection = getConnection(connectionName)
-      map.put(connectionName, connection)
+      connectionOpt = getConnection(connectionName)
+      if (connectionOpt != None) {
+        map.put(connectionName, connectionOpt.get)
+        connection = connectionOpt.get
+      }
     } else {
-      connection = c.get
+      connection = map.get(connectionName).get
     }
 
-    try {
-      body(connection)
-    } finally {
-      if (isFirst) {
-        connection.close()
+    if (connection != null) {
+      try {
+        body(connection)
+      } finally {
+        if (isFirst) {
+          connection.close()
+        }
       }
+
+    } else {
+      throw new Exception("Connection not found")
     }
+
   }
 }

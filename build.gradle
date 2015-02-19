@@ -12,11 +12,11 @@ repositories {
 
 dependencies {
     compile 'org.scala-lang:scala-library:2.11.5'
-    compile 'com.h2database:h2:1.4.185'
+    
     compile 'com.zaxxer:HikariCP-java6:2.3.2'
     
     
-    
+    testCompile 'com.h2database:h2:1.4.185'
     testCompile "org.scala-lang:scala-library:2.11.5"
     testCompile "org.scalatest:scalatest_2.11:2.2.4"
     testCompile "junit:junit:4.12"
@@ -30,6 +30,12 @@ jar.doFirst{
             )
    }
 }
+
+task copyTestResources(type: Copy) {
+    from "${projectDir}/src/test/resources"
+    into "${buildDir}/classes/test"
+}
+processTestResources.dependsOn copyTestResources
 
 task copyToLib(type: Copy, dependsOn: build) {
     into "$buildDir/libs"
