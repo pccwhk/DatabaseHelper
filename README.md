@@ -5,9 +5,11 @@ It borrows the concept from Playframework's DB Api plugin.
 
 This is a scala library, built by Gradle scala plugin. 
 
-Sample usage will be:
+Sample usage of SimpleDBManager
 
 ```scala
+
+  import org.ccw.database.SimpleDBManager
   // create connection pool
   val cp1 = JdbcConnectionPool.create("jdbc:h2:mem:test1", "sa", "sa");
   
