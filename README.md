@@ -7,6 +7,7 @@ This is a scala library, built by Gradle scala plugin.
 
 Sample usage will be:
 
+```scala
   // create connection pool
   val cp1 = JdbcConnectionPool.create("jdbc:h2:mem:test1", "sa", "sa");
   
@@ -28,3 +29,4 @@ Sample usage will be:
     }
     
   }
+```
