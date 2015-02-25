@@ -7,6 +7,19 @@ import scala.collection.mutable.ListBuffer
 
 trait ResultHelper {
 
+  def iterateResultSet[T](rs: ResultSet)(f :ResultSet => T) = {
+    val colCount = rs.getMetaData.getColumnCount
+    while (rs.next()) {
+      for (i <- 1 to colCount) {
+        val data = rs.getString(i)
+        if (data != null) {
+          (data.trim())
+        }
+        f(rs)
+      }
+    }
+  }
+
   def resultAsList[T](preparedStatement: PreparedStatement, rs2Model: ResultSet => T): List[T] = {
     val rs = preparedStatement.executeQuery()
     val list = ListBuffer[T]()

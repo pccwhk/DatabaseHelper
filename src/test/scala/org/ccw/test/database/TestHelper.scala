@@ -19,8 +19,8 @@ object TestHelper {
   val name1 = "h2InMem1"
   val name2 = "h2InMem2"
 
-  SimpleDBManager.addConnectionPool(name1, cp1)
-  SimpleDBManager.addConnectionPool(name2, cp2)
+  SimpleDBManager.registerConnectionPool(name1, cp1)
+  SimpleDBManager.registerConnectionPool(name2, cp2)
 }
 
 class TestHelper extends JUnitSuite {
@@ -46,7 +46,6 @@ class TestHelper extends JUnitSuite {
     }
   }
 
- 
   @Test def testDBManager() {
     SimpleDBManager.withThreadLocalConnection(TestHelper.name1) {
       c =>
@@ -64,9 +63,19 @@ class TestHelper extends JUnitSuite {
     val s = a.createStatement()
     val rs = s.executeQuery("select * from stock ")
     val metaData = rs.getMetaData
+
     val colCount = metaData.getColumnCount
     val sb = new StringBuilder
     for (i <- 1 to colCount) {
+
+      val colType = metaData.getColumnType(i)
+      val colName = metaData.getColumnName(i)
+      val colTypeName = metaData.getColumnTypeName(i)
+      val precision = metaData.getPrecision(i)
+      val scale = metaData.getScale(i)
+      val tableName = metaData.getTableName(i)
+      
+      println(s"$colName $colType $precision $scale $tableName $colTypeName")
       sb.append(metaData.getColumnName(i)).append(",")
     }
     sb.deleteCharAt(sb.length - 1)

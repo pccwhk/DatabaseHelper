@@ -15,6 +15,19 @@ trait DB {
     }
   }
 
+  def withNewConnection(connectionName: String)(body: Connection => Unit) = {
+    var connectionOpt = getConnection(connectionName)
+    if (connectionOpt == None) {
+      throw new Exception("Connection Name not found")
+    } else {
+      try {
+        body(connectionOpt.get)
+      } finally {
+        connectionOpt.get.close()
+      }
+    }
+  }
+
   def withThreadLocalConnection(connectionName: String)(body: Connection => Unit) = {
     val map = threadLocalMap.get
     var isFirst = false

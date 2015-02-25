@@ -8,7 +8,7 @@ object SimpleDBManager extends DB {
   
   val dataSourceMap =  new TrieMap[String, DataSource]()
   
-  def addConnectionPool(name :String, datasource :DataSource) {
+  def registerConnectionPool(name :String, datasource :DataSource) {
      dataSourceMap.put(name, datasource)
   }
   
@@ -18,5 +18,4 @@ object SimpleDBManager extends DB {
     }
     else None
   }
-
 }
